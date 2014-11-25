@@ -167,7 +167,7 @@ void app_info(u64 offset){
 	offset += sizeof(u64);
 
 	printf("--- APP INFO ---\n");	
-	printf("Authotiry ID            0x%016lx\n",authid);
+	printf("Authority ID            0x%016lx\n",authid);
 	printf("Vendor ID               0x%08x\n",vendor_id);
 	printf("SELF Type               0x%08x\n",self_type);
 	printf("Version                 0x%016lx\n",version);

@@ -9,6 +9,45 @@ typedef uint64_t u64;
 typedef uint32_t u32;
 typedef uint16_t u16;
 typedef uint8_t u8;
+typedef u8 boolean;
+
+#define TRUE 1
+#define FALSE 0
+
+#define PKG_TYPE_PS3 0x0001
+#define PKG_TYPE_PSP 0x0002
+
+#define PKG_REV_BETA 0x0000
+#define PKG_REV_RETAIL 0x8000
+
+typedef struct {
+	u32 magic; // magic (.PKG)
+	u16 pkg_revision; // pkg revision
+	u16 pkg_type; // pkg type
+	u32 pkg_info_offset; // info offset
+	u32 pkg_info_count; // info length
+	u32 header_size; // header size
+	u32 item_count; // files and folders into the encrypted data
+	u64 total_size; // total pkg file size
+	u64 data_offset; // encrypted data offset
+	u64 data_size; // encrypted data size
+	char contentid[0x30]; // pkg content id
+	u8 digest[0x10]; // sha1 from debug files and attributes together merged in one block
+	u8 pkg_data_riv[0x10]; // aes-128-ctr iv. uses with gpkg_key for decrypt data
+	u8 header_cmac_hash[0x10]; // cmac omac hash from 0x00-0x7F, gpkg_key used as key
+	u8 header_npdrm_signature[0x28]; // Header NPDRM ECDSA (R_sig, S_sig)
+	u8 header_sha1_hash[0x08]; // last 8 bytes of sha1 hash from 0x00-0x7F
+} PKG_HEADER;
+
+typedef struct {
+   u32 filename_offset;
+   u32 filename_size;
+   u64 data_offset;
+   u64 data_size;
+   u32 flags;
+   u32 padding;
+   char filename[256]; // last so that we can point it to other parts, could also be a pointer
+ } PKG_FILE_HEADER;
 
 struct elf_phdr {
 	u32 p_type;

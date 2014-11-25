@@ -337,7 +337,7 @@ void aes256cbc_enc(u8 *key, u8 *iv, u8 *in, u64 len, u8 *out)
 void aes128ctr(u8 *key, u8 *iv, u8 *in, u64 len, u8 *out)
 {
 	AES_KEY k;
-	u32 i;
+	u32 i,j;
 	u8 ctr[16];
 	u64 tmp;
 
@@ -349,10 +349,25 @@ void aes128ctr(u8 *key, u8 *iv, u8 *in, u64 len, u8 *out)
 	for (i = 0; i < len; i++) {
 		if ((i & 0xf) == 0) {
 			AES_encrypt(iv, ctr, &k);
-
+/*
+			for (j = 0; j < 16; j++)
+				printf("%#02x ",ctr[j]);
+			printf("\n");
+*/
 			// increase nonce
 			tmp = be64(iv + 8) + 1;
+/*
+			for (j = 0; j < 16; j++)
+				printf("%#02x ",iv[j]);
+*7
 			wbe64(iv + 8, tmp);
+/*
+			printf(", tmp= %lu\n",tmp);
+			for (j = 0; j < 16; j++)
+				printf("%#02x ",iv[j]);
+			printf("\n");
+			fflush(stdout);
+*/
 			if (tmp == 0)
 				wbe64(iv, be64(iv) + 1);
 		}
